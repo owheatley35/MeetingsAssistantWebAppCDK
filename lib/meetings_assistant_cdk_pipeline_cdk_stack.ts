@@ -13,7 +13,7 @@ export class MeetingsAssistantCDKPipelineCDKStack extends Stack {
                 input: CodePipelineSource.connection(ConfigValues.GITHUB_CDK_REPO, 'mainline', {
                     connectionArn: ConfigValues.GITHUB_CONNECTION_ARN
                 }),
-                commands: ['npm install', 'npm run build', 'npx cdk synth']
+                commands: ['npm ci', 'npm run build', 'npx cdk synth']
             })
         });
     }
