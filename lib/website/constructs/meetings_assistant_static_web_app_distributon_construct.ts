@@ -9,7 +9,7 @@ export interface MeetingsAssistantStaticWebAppDistributionConstructProps {
 
 export class MeetingsAssistantStaticWebAppDistributionConstruct extends Construct {
     
-    readonly bucketName: string;
+    readonly bucket: Bucket;
     
     constructor(parent: Stack, id: string, props: MeetingsAssistantStaticWebAppDistributionConstructProps) {
         super(parent, id);
@@ -40,6 +40,6 @@ export class MeetingsAssistantStaticWebAppDistributionConstruct extends Construc
         );
         
         // Public Values
-        this.bucketName = s3Storage.bucketName;
+        this.bucket = s3Storage;
     }
 }
