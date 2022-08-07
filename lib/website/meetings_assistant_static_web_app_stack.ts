@@ -11,7 +11,7 @@ export interface MeetingsAssistantStaticWebsiteDistributionStackProps extends St
 
 export class MeetingsAssistantStaticWebAppStack extends Stack {
     constructor(parent: Construct, id: string, props: MeetingsAssistantStaticWebsiteDistributionStackProps) {
-        super(parent, id);
+        super(parent, id, props);
         
         const webAppDistributionStack: MeetingsAssistantStaticWebAppDistributionConstruct =
             new MeetingsAssistantStaticWebAppDistributionConstruct(this, 'meetings-assistant-web-app-distribution', {appName: props.appName})

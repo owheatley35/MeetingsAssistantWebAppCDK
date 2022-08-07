@@ -3,19 +3,10 @@ import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
 import {MeetingsAssistantCDKPipelineCDKStack} from "../lib/meetings_assistant_cdk_pipeline_cdk_stack";
 import ConfigValues from "../lib/ConfigValues";
-import {MeetingsAssistantWebAppCdkStack} from "../lib/meetings_assistant_web_app_cdk-stack";
 
 const app = new cdk.App();
 
 new MeetingsAssistantCDKPipelineCDKStack(app, 'meetings-assistant-cdk-pipeline-cdk-stack', {
-    env: {
-        account: ConfigValues.DEPLOYMENT_ACCOUNT,
-        region: ConfigValues.DEPLOYMENT_REGION
-    }
-});
-
-new MeetingsAssistantWebAppCdkStack(app, 'meetings-assistant-web-app-stack', {
-    terminationProtection: false,
     env: {
         account: ConfigValues.DEPLOYMENT_ACCOUNT,
         region: ConfigValues.DEPLOYMENT_REGION
