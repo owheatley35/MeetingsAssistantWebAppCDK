@@ -19,6 +19,6 @@ export class MeetingsAssistantCDKPipelineCDKStack extends Stack {
         });
         
         // Add stage for CDK deployment of non Pipeline resources
-        const cdkDeploymentStage = pipeline.addStage(new CodePipelineCDKDeploymentStage(this, 'CDK Deploy', {}))
+        const cdkDeploymentStage = pipeline.addStage(new CodePipelineCDKDeploymentStage(this, 'CDK-Deploy', {}))
     }
 }
