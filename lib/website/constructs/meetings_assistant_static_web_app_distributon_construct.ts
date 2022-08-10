@@ -1,10 +1,7 @@
 import {Construct} from "constructs";
 import {RemovalPolicy, Stack} from "aws-cdk-lib";
 import {Bucket} from "aws-cdk-lib/aws-s3";
-import {
-    AllowedMethods,
-    Distribution
-} from "aws-cdk-lib/aws-cloudfront";
+import {AllowedMethods, Distribution} from "aws-cdk-lib/aws-cloudfront";
 import {S3Origin} from "aws-cdk-lib/aws-cloudfront-origins";
 
 export interface MeetingsAssistantStaticWebAppDistributionConstructProps {
@@ -19,7 +16,6 @@ export class MeetingsAssistantStaticWebAppDistributionConstruct extends Construc
         super(parent, id);
         
         const s3Storage = new Bucket(this, `${props.appName}-static-web-app`, {
-            publicReadAccess: true,
             removalPolicy: RemovalPolicy.DESTROY,
             websiteIndexDocument: "index.html",
         });
