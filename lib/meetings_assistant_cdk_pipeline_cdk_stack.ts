@@ -3,7 +3,7 @@ import {Construct} from "constructs";
 import {CodePipeline, CodePipelineSource, ShellStep} from "aws-cdk-lib/pipelines";
 import ConfigValues from "./ConfigValues";
 import CodePipelineCDKDeploymentStage from "./cdkpipeline/code_pipeline_cdk_deployment_stage";
-import CodePipelineIAMRoleFactory from "./cdkpipeline/pipeline_permissions";
+import CodePipelineIAMRoleFactory, {PIPELINE_POLICY} from "./cdkpipeline/pipeline_permissions";
 
 export class MeetingsAssistantCDKPipelineCDKStack extends Stack {
     constructor(parent: Construct, id: string, props: StackProps) {
@@ -24,6 +24,8 @@ export class MeetingsAssistantCDKPipelineCDKStack extends Stack {
         pipeline.addStage(cdkStage)
         
         pipeline.buildPipeline();
+        
+        pipeline.pipeline.addToRolePolicy(PIPELINE_POLICY);
         
         // Grant Permissions to the CodePipeline
         const roleFactory = new CodePipelineIAMRoleFactory(this);
