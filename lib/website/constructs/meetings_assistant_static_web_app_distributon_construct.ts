@@ -1,7 +1,7 @@
 import {Construct} from "constructs";
 import {RemovalPolicy, Stack} from "aws-cdk-lib";
 import {Bucket} from "aws-cdk-lib/aws-s3";
-import {AllowedMethods, Distribution} from "aws-cdk-lib/aws-cloudfront";
+import {AllowedMethods, Distribution, OriginAccessIdentity} from "aws-cdk-lib/aws-cloudfront";
 import {S3Origin} from "aws-cdk-lib/aws-cloudfront-origins";
 
 export interface MeetingsAssistantStaticWebAppDistributionConstructProps {
@@ -20,13 +20,18 @@ export class MeetingsAssistantStaticWebAppDistributionConstruct extends Construc
             websiteIndexDocument: "index.html",
         });
         
+        const originAccessIdentity: OriginAccessIdentity = new OriginAccessIdentity(this, 'cloudfront-origin-access');
+        s3Storage.grantRead(originAccessIdentity);
+        
         const cloudfrontDistribution = new Distribution(this,
             `${props.appName}-static-web-app-cloudfront-distribution`,
             {
                 enabled: true,
                 defaultBehavior: {
-                    origin: new S3Origin(s3Storage),
-                    allowedMethods: AllowedMethods.ALLOW_ALL
+                    origin: new S3Origin(s3Storage, {
+                        originAccessIdentity: originAccessIdentity
+                    }),
+                    allowedMethods: AllowedMethods.ALLOW_ALL,
                 },
                 defaultRootObject: "index.html",
                 enableIpv6: true,
