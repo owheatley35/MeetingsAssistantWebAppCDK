@@ -1,6 +1,6 @@
 import {Construct} from "constructs";
 import {RemovalPolicy, Stack} from "aws-cdk-lib";
-import {Bucket} from "aws-cdk-lib/aws-s3";
+import {Bucket, BucketAccessControl} from "aws-cdk-lib/aws-s3";
 import {AllowedMethods, Distribution, OriginAccessIdentity} from "aws-cdk-lib/aws-cloudfront";
 import {S3Origin} from "aws-cdk-lib/aws-cloudfront-origins";
 
@@ -17,10 +17,12 @@ export class MeetingsAssistantStaticWebAppDistributionConstruct extends Construc
         
         const s3Storage = new Bucket(this, `${props.appName}-static-web-app`, {
             removalPolicy: RemovalPolicy.DESTROY,
-            websiteIndexDocument: "index.html",
+            accessControl: BucketAccessControl.PRIVATE
         });
         
-        const originAccessIdentity: OriginAccessIdentity = new OriginAccessIdentity(this, 'cloudfront-origin-access');
+        const originAccessIdentity: OriginAccessIdentity = new OriginAccessIdentity(this, 'cloudfront-origin-access', {
+            comment: "To grant access to website",
+        });
         s3Storage.grantRead(originAccessIdentity);
         
         const cloudfrontDistribution = new Distribution(this,
