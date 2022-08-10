@@ -25,7 +25,7 @@ export class MeetingsAssistantCDKPipelineCDKStack extends Stack {
         
         pipeline.buildPipeline();
         
-        pipeline.pipeline.addToRolePolicy(PIPELINE_POLICY);
+        // pipeline.pipeline.addToRolePolicy(PIPELINE_POLICY);
         
         // Grant Permissions to the CodePipeline
         const roleFactory = new CodePipelineIAMRoleFactory(this);
