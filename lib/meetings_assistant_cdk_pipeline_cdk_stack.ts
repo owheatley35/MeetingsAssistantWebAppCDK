@@ -3,6 +3,7 @@ import {Construct} from "constructs";
 import {CodePipeline, CodePipelineSource, ShellStep} from "aws-cdk-lib/pipelines";
 import ConfigValues from "./ConfigValues";
 import CodePipelineCDKDeploymentStage from "./cdkpipeline/code_pipeline_cdk_deployment_stage";
+import CodePipelineIAMRoleFactory from "./cdkpipeline/pipeline_permissions";
 
 export class MeetingsAssistantCDKPipelineCDKStack extends Stack {
     constructor(parent: Construct, id: string, props: StackProps) {
@@ -21,5 +22,11 @@ export class MeetingsAssistantCDKPipelineCDKStack extends Stack {
         // Add stage for CDK deployment of non Pipeline resources
         const cdkStage = new CodePipelineCDKDeploymentStage(parent, 'CDK-Deploy');
         pipeline.addStage(cdkStage)
+        
+        pipeline.buildPipeline();
+        
+        // Grant Permissions to the CodePipeline
+        const roleFactory = new CodePipelineIAMRoleFactory(this);
+        roleFactory.createRole('cdk-deploy', pipeline.pipeline.pipelineArn);
     }
 }

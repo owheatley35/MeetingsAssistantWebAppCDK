@@ -65,7 +65,7 @@ export class MeetingsAssistantWebAppPipelineConstruct extends Construct {
             ]
         }
         
-        // Define Pipeline itself.
+        // Define Pipeline itself. Stages are in order of deployment.
         new Pipeline(this, `Code-pipeline`, {
             pipelineName: `MeetingsAssistantWebAppStaticResPipeline`,
             crossAccountKeys: false,
