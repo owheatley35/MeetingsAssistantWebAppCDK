@@ -15,16 +15,20 @@ export class MeetingsAssistantStaticWebAppDistributionConstruct extends Construc
     constructor(parent: Stack, id: string, props: MeetingsAssistantStaticWebAppDistributionConstructProps) {
         super(parent, id);
         
+        // S3 Bucket for Static Web Resources
         const s3Storage = new Bucket(this, `${props.appName}-static-web-app`, {
             removalPolicy: RemovalPolicy.DESTROY,
-            accessControl: BucketAccessControl.PRIVATE
+            accessControl: BucketAccessControl.PRIVATE,
+            websiteIndexDocument: "index.html"
         });
         
+        // Grant CloudFront Access to the S3 Bucket
         const originAccessIdentity: OriginAccessIdentity = new OriginAccessIdentity(this, 'cloudfront-origin-access', {
             comment: "To grant access to website",
         });
         s3Storage.grantRead(originAccessIdentity);
         
+        // Create Cloudfront distribution
         const cloudfrontDistribution = new Distribution(this,
             `${props.appName}-static-web-app-cloudfront-distribution`,
             {
