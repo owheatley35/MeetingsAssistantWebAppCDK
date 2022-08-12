@@ -18,8 +18,7 @@ export class MeetingsAssistantStaticWebAppDistributionConstruct extends Construc
         // S3 Bucket for Static Web Resources
         const s3Storage = new Bucket(this, `${props.appName}-static-web-app`, {
             removalPolicy: RemovalPolicy.DESTROY,
-            accessControl: BucketAccessControl.PRIVATE,
-            websiteIndexDocument: "index.html"
+            accessControl: BucketAccessControl.PRIVATE
         });
         
         // Grant CloudFront Access to the S3 Bucket
@@ -39,6 +38,13 @@ export class MeetingsAssistantStaticWebAppDistributionConstruct extends Construc
                     }),
                     allowedMethods: AllowedMethods.ALLOW_ALL,
                 },
+                errorResponses:[
+                    {
+                        httpStatus: 404,
+                        responseHttpStatus: 200,
+                        responsePagePath: 'index.html'
+                    }
+                ],
                 defaultRootObject: "index.html",
                 enableIpv6: true,
             }
