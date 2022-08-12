@@ -42,7 +42,7 @@ export class MeetingsAssistantStaticWebAppDistributionConstruct extends Construc
                     {
                         httpStatus: 404,
                         responseHttpStatus: 200,
-                        responsePagePath: 'index.html'
+                        responsePagePath: '/index.html'
                     }
                 ],
                 defaultRootObject: "index.html",
