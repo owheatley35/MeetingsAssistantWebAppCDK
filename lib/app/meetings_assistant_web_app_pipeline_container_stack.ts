@@ -7,6 +7,6 @@ export default class MeetingsAssistantWebAppPipelineContainerStack extends Stack
         super(scope, id, props);
         
         // Pipeline Defines all resources
-        new MeetingsAssistantWebAppPipelineStack(this, 'meetings-assistant-web-app-pipeline-stack');
+        new MeetingsAssistantWebAppPipelineStack(this, 'meetings-assistant-app-pipeline-stack');
     }
 }
