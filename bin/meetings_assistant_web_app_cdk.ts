@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
-import {MeetingsAssistantCDKPipelineCDKStack} from "../lib/meetings_assistant_cdk_pipeline_cdk_stack";
+import {MeetingsAssistantCDKPipelineCDKStack} from "../lib/cdkpipeline/meetings_assistant_cdk_pipeline_cdk_stack";
 import ConfigValues from "../lib/ConfigValues";
 
 const app = new cdk.App();

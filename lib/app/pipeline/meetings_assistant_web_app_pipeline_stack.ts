@@ -1,23 +1,23 @@
-import {Construct} from "constructs";
-import {Stack} from "aws-cdk-lib";
 import ConfigValues from "../../ConfigValues";
 import {Artifact, Pipeline, StageProps} from "aws-cdk-lib/aws-codepipeline";
 import {CodeBuildAction, CodeStarConnectionsSourceAction, S3DeployAction} from "aws-cdk-lib/aws-codepipeline-actions";
 import {LinuxBuildImage, PipelineProject} from "aws-cdk-lib/aws-codebuild";
-import {Bucket} from "aws-cdk-lib/aws-s3";
+import {MeetingsAssistantWebAppCdkStack} from "../meetings_assistant_web_app_cdk-stack";
+import {Construct} from "constructs";
+import {StageConfigurations} from "./StageConfigurations";
+import Stage from "./Stage";
 
-export interface MeetingsAssistantWebAppPipelineConstructProps {
-    readonly s3DeploymentBucket: Bucket;
-}
-
-export class MeetingsAssistantWebAppPipelineConstruct extends Construct {
-    constructor(parent: Stack, id: string, props: MeetingsAssistantWebAppPipelineConstructProps) {
+export class MeetingsAssistantWebAppPipelineStack extends Construct {
+    constructor(parent: Construct, id: string) {
         super(parent, id);
         
-        const sourceOutput: Artifact = new Artifact('SourceArtifact');
-        const buildOutput: Artifact = new Artifact('BuildArtifact');
+        // == Artifacts == //
+        const sourceOutput: Artifact = new Artifact('WebAppSourceArtifact');
+        const buildOutput: Artifact = new Artifact('WebAppBuildArtifact');
         
-        // Define stages
+        const stagesToDeployInOrder: Array<StageProps> = []
+        
+        // == Define Stages == //
         const sourceStage: StageProps = {
             stageName: "SourceStage",
             transitionToEnabled: true,
@@ -52,28 +52,36 @@ export class MeetingsAssistantWebAppPipelineConstruct extends Construct {
             ]
         }
         
-        const deployStage: StageProps = {
-            stageName: "Deploy",
-            transitionToEnabled: true,
-            actions: [
-                new S3DeployAction({
-                    actionName: "S3-Deploy-Action",
-                    input: buildOutput,
-                    bucket: props.s3DeploymentBucket,
-                    extract: true
-                })
-            ]
-        }
+        stagesToDeployInOrder.push(sourceStage, buildStage);
+        
+        // Deploy infrastructure for each stage
+        StageConfigurations.ACTIVE_STAGES.forEach((stage: Stage) => {
+            
+            const webAppCdkStack: MeetingsAssistantWebAppCdkStack =
+                new MeetingsAssistantWebAppCdkStack(this, `${stage.stageType.toLowerCase()}-meetings-assistant-web-app`, {stage: stage.stageType})
+    
+            const stageToDeploy: StageProps = {
+                stageName: `${stage.stageType}`,
+                transitionToEnabled: true,
+                actions: [
+                    new S3DeployAction({
+                        actionName: `${stage.stageType.toLowerCase()}-web-S3-Deploy-Action`,
+                        input: buildOutput,
+                        bucket: webAppCdkStack.staticWebAppDeploymentBucket,
+                        extract: true
+                    }),
+                    ...stage.stageDeploymentActions
+                ]
+            }
+            
+            stagesToDeployInOrder.push(stageToDeploy);
+        });
         
         // Define Pipeline itself. Stages are in order of deployment.
         new Pipeline(this, `Code-pipeline`, {
             pipelineName: `MeetingsAssistantWebAppStaticResPipeline`,
             crossAccountKeys: false,
-            stages: [
-                sourceStage,
-                buildStage,
-                deployStage
-            ]
+            stages: stagesToDeployInOrder
         })
     }
 }

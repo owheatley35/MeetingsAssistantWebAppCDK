@@ -1,9 +1,9 @@
 import {Stack, StackProps} from "aws-cdk-lib";
 import {Construct} from "constructs";
 import {CodePipeline, CodePipelineSource, ShellStep} from "aws-cdk-lib/pipelines";
-import ConfigValues from "./ConfigValues";
-import CodePipelineCDKDeploymentStage from "./cdkpipeline/code_pipeline_cdk_deployment_stage";
-import CodePipelineIAMRoleFactory from "./cdkpipeline/pipeline_permissions";
+import ConfigValues from "../ConfigValues";
+import CodePipelineCDKDeploymentStage from "./code_pipeline_cdk_deployment_stage";
+import CodePipelineIAMRoleFactory from "./pipeline_permissions";
 
 export class MeetingsAssistantCDKPipelineCDKStack extends Stack {
     constructor(parent: Construct, id: string, props: StackProps) {

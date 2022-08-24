@@ -1,7 +1,6 @@
-import ConfigValues from "../ConfigValues";
 import {Stack, Stage} from "aws-cdk-lib";
 import {Construct} from "constructs";
-import {MeetingsAssistantWebAppCdkStack} from "../meetings_assistant_web_app_cdk-stack";
+import MeetingsAssistantWebAppPipelineContainerStack from "../app/meetings_assistant_web_app_pipeline_container_stack";
 
 export default class CodePipelineCDKDeploymentStage extends Stage {
     public readonly stack: Stack;
@@ -9,12 +8,8 @@ export default class CodePipelineCDKDeploymentStage extends Stage {
     constructor(scope: Construct, id: string) {
         super(scope, id);
     
-        this.stack = new MeetingsAssistantWebAppCdkStack(this, 'meetings-assistant-web-app-stack', {
+        this.stack = new MeetingsAssistantWebAppPipelineContainerStack(this, 'meetings-assistant-web-app-stack', {
             terminationProtection: false,
-            env: {
-                account: ConfigValues.DEPLOYMENT_ACCOUNT,
-                region: ConfigValues.DEPLOYMENT_REGION
-            }
         });
     }
 }

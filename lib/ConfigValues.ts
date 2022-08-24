@@ -7,8 +7,10 @@ export default class ConfigValues {
     
     // Deployment Config
     static DEPLOYMENT_REGION: string = "eu-west-2";
-    static DEPLOYMENT_ACCOUNT: string = "276910988699"
+    static DEPLOYMENT_ACCOUNT: string = "276910988699";
     
     // Constants
-    static APP_NAME: string = "MeetingsAssistant"
+    static APP_NAME: string = "MeetingsAssistant";
+    static LAMBDA_ZIP_NAME = "lambda_function";
+    static LAMBDA_ZIP_NAME_WITH_EXT = `${ConfigValues.LAMBDA_ZIP_NAME}.zip`;
 }
