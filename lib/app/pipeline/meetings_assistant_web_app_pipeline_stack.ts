@@ -42,7 +42,6 @@ export class MeetingsAssistantWebAppPipelineStack extends Construct {
                     input: sourceOutput,
                     outputs: [buildOutput],
                     project: new PipelineProject(this, 'MeetingsAssistant-WebApp-Pipeline-CodeBuild-Project', {
-                        projectName: 'MeetingsAssistant-WebApp-Pipeline-CodeBuild-Project',
                         environment: {
                             buildImage: LinuxBuildImage.AMAZON_LINUX_2_4,
                             privileged: true
