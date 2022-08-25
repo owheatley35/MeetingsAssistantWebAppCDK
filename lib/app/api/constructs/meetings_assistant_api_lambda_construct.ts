@@ -26,7 +26,7 @@ export class MeetingsAssistantApiLambdaConstruct extends Construct {
         })
 
         this.lambdaFunction = new Function(this, `${props.stage.toLowerCase()}-api-lambda-function`, {
-            code: Code.fromBucket(bucketDeployment.deployedBucket, ConfigValues.LAMBDA_ZIP_NAME_WITH_EXT),
+            code: Code.fromBucket(bucketDeployment.deployedBucket, ConfigValues.LAMBDA_PY_NAME_WITH_EXT),
             description: "API Lambda Function for Meetings Assistant",
             handler: "lambda_handler.handle",
             runtime: Runtime.PYTHON_3_8,
