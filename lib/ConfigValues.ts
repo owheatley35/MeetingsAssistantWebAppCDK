@@ -13,5 +13,4 @@ export default class ConfigValues {
     static APP_NAME: string = "MeetingsAssistant";
     static LAMBDA_ZIP_NAME = "lambda_function";
     static LAMBDA_ZIP_NAME_WITH_EXT = `${ConfigValues.LAMBDA_ZIP_NAME}.zip`;
-    static LAMBDA_PY_NAME_WITH_EXT = 'lambda_handler.py'
 }
