@@ -12,6 +12,7 @@ export interface MeetingsAssistantStaticWebAppDistributionConstructProps {
 export class MeetingsAssistantStaticWebAppDistributionConstruct extends Construct {
     
     readonly bucket: Bucket;
+    readonly websiteDomain: string;
     
     constructor(parent: Construct, id: string, props: MeetingsAssistantStaticWebAppDistributionConstructProps) {
         super(parent, id);
@@ -53,5 +54,6 @@ export class MeetingsAssistantStaticWebAppDistributionConstruct extends Construc
         
         // Public Values
         this.bucket = s3Storage;
+        this.websiteDomain = cloudfrontDistribution.distributionDomainName;
     }
 }

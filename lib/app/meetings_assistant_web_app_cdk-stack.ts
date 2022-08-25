@@ -3,6 +3,7 @@ import {Construct} from "constructs";
 import {Bucket} from "aws-cdk-lib/aws-s3";
 import {MeetingsAssistantStaticWebAppStack} from "./website/meetings_assistant_static_web_app_stack";
 import {StageType} from "./pipeline/StageConfigurations";
+import {MeetingsAssistantAPIStack} from "./api/meetings_assistant_api_stack";
 
 export interface DefaultConstructProps {
     readonly stage: StageType;
@@ -15,22 +16,30 @@ export interface DefaultStackProps extends StackProps, DefaultConstructProps {}
  **/
 export class MeetingsAssistantWebAppCdkStack extends Stack {
     public readonly staticWebAppDeploymentBucket: Bucket;
+    public readonly webappApiLambdaDeploymentBucket: Bucket;
     
     constructor(scope: Construct, id: string, props: DefaultStackProps) {
         super(scope, id, props);
         
-        const stackName = `${props.stage.toLowerCase()}-meetings-assistant-static-web-app-stack`;
+        const webAppStackName: string = `${props.stage.toLowerCase()}-meetings-assistant-static-web-app-stack`;
+        const lambdaStackName: string = `${props.stage.toLowerCase()}-meetings-assistant-web-app-api-stack`;
     
         // == Stacks ==
         const staticWebAppStack: MeetingsAssistantStaticWebAppStack =
-            new MeetingsAssistantStaticWebAppStack(this, stackName, {
+            new MeetingsAssistantStaticWebAppStack(this, webAppStackName, {
                 stage: props.stage,
-                stackName: stackName
+                stackName: webAppStackName
             });
         
-        // TODO: Define API Stack Here...
+        const webAppApiStack: MeetingsAssistantAPIStack =
+            new MeetingsAssistantAPIStack(this, lambdaStackName, {
+                stage: props.stage,
+                stackName: lambdaStackName,
+                websiteDomain: staticWebAppStack.websiteDomain
+            })
         
         // == Variables Required by Pipeline ==
         this.staticWebAppDeploymentBucket = staticWebAppStack.websiteBucket;
+        this.webappApiLambdaDeploymentBucket = webAppApiStack.lambdaDeploymentBucket;
     }
 }

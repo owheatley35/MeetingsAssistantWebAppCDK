@@ -12,6 +12,7 @@ export interface MeetingsAssistantStaticWebsiteDistributionStackProps extends St
 
 export class MeetingsAssistantStaticWebAppStack extends Stack {
     public readonly websiteBucket: Bucket;
+    public readonly websiteDomain: string;
     
     constructor(parent: Construct, id: string, props: MeetingsAssistantStaticWebsiteDistributionStackProps) {
         super(parent, id, props);
@@ -19,6 +20,8 @@ export class MeetingsAssistantStaticWebAppStack extends Stack {
         const webAppDistributionStack: MeetingsAssistantStaticWebAppDistributionConstruct =
             new MeetingsAssistantStaticWebAppDistributionConstruct(this, `${props.stage.toLowerCase()}-meetings-assistant-web-dist`, {stage: props.stage});
         
+        // Public Values
         this.websiteBucket = webAppDistributionStack.bucket;
+        this.websiteDomain = webAppDistributionStack.websiteDomain;
     }
 }
