@@ -20,7 +20,7 @@ export class MeetingsAssistantApiLambdaConstruct extends Construct {
         });
         
         new BucketDeployment(this, `${props.stage.toLowerCase()}-meetings-assistant-lambda-deploy`, {
-            sources: [Source.asset(path.join(__dirname, './res/lambda_handler.zip'))],
+            sources: [Source.asset(path.join(__dirname, './res/lambda_function.zip'))],
             destinationBucket: this.lambdaDeploymentBucket,
             prune: false
         })
