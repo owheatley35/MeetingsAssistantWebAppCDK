@@ -4,6 +4,7 @@ import {Bucket, BucketAccessControl} from "aws-cdk-lib/aws-s3";
 import ConfigValues from "../../../ConfigValues";
 import {DefaultConstructProps} from "../../meetings_assistant_web_app_cdk-stack";
 import {BucketDeployment, Source} from "aws-cdk-lib/aws-s3-deployment";
+import * as path from "path";
 
 export class MeetingsAssistantApiLambdaConstruct extends Construct {
     public readonly lambdaFunction: Function;
@@ -19,7 +20,7 @@ export class MeetingsAssistantApiLambdaConstruct extends Construct {
         });
         
         new BucketDeployment(this, `${props.stage.toLowerCase()}-meetings-assistant-lambda-deploy`, {
-            sources: [Source.asset('./res/lambda_handler.zip')],
+            sources: [Source.asset(path.join(__dirname, './res/lambda_handler.zip'))],
             destinationBucket: this.lambdaDeploymentBucket,
             prune: false
         })
