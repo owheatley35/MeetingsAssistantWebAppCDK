@@ -44,7 +44,7 @@ export class MeetingsAssistantWebAppPipelineStack extends Construct {
         
         // == Define Stages == //
         const sourceStage: StageProps = {
-            stageName: "SourceStage",
+            stageName: "Source",
             transitionToEnabled: true,
             actions: codeDeploymentManager.sourceActions
         }
