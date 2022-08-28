@@ -32,7 +32,7 @@ class MeetingsAssistantApiGatewayConstruct extends Construct {
         
         // GET /meetings - Return all meetings owned by owner
         const items = api.root.addResource('meetings');
-        items.addMethod('GET', new HttpIntegration(''));
+        items.addMethod('GET');
         
         //     {
         //     authorizer: authorizer
