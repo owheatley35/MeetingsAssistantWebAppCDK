@@ -1,5 +1,5 @@
 import {Construct} from "constructs";
-import {Code, Function, Runtime} from "aws-cdk-lib/aws-lambda"
+import {Code, Function, Runtime} from "aws-cdk-lib/aws-lambda";
 import {Bucket, BucketAccessControl} from "aws-cdk-lib/aws-s3";
 import ConfigValues from "../../../ConfigValues";
 import {DefaultConstructProps} from "../../meetings_assistant_web_app_cdk-stack";
