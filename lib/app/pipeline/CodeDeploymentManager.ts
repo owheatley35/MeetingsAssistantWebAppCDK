@@ -54,9 +54,9 @@ class CodeDeploymentManager {
             // Generate S3 Deployment Actions for each stage (If required)
             if (!(deployment.deploymentBuckets === undefined)) {
                 StageConfigurations.ACTIVE_STAGES.forEach((stage) => {
-                    const stageName: string = stage.stageType.toLowerCase();
-        
-                    let existingActions: IAction[] = (this.deploymentActionsMap.has(stageName)) ? this.deploymentActionsMap.get(stage.stageType.toLowerCase())! : new Array<IAction>();
+                    
+                    const stageName: string = stage.stageType;
+                    let existingActions: IAction[] = (this.deploymentActionsMap.has(stageName)) ? this.deploymentActionsMap.get(stageName)! : new Array<IAction>();
                     
                     let s3DeploymentAction: S3DeployAction;
                     
