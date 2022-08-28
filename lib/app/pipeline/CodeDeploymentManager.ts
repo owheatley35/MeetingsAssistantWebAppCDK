@@ -10,6 +10,7 @@ export interface CodeDeployment {
     readonly deploymentRepo: string;
     readonly deploymentBuckets?: Map<StageType, Bucket>;
     readonly extract: boolean;
+    readonly deploymentObjectName?: string;
 }
 
 class CodeDeploymentManager {
@@ -56,15 +57,27 @@ class CodeDeploymentManager {
                     const stageName: string = stage.stageType.toLowerCase();
         
                     let existingActions: IAction[] = (this.deploymentActionsMap.has(stageName)) ? this.deploymentActionsMap.get(stage.stageType.toLowerCase())! : new Array<IAction>();
-        
-                    existingActions.push(
-                        new S3DeployAction({
+                    
+                    let s3DeploymentAction: S3DeployAction;
+                    
+                    if (deployment.deploymentObjectName) {
+                        s3DeploymentAction = new S3DeployAction({
+                            actionName: `${stage.stageType.toLowerCase()}-${deployment.deploymentRepo}-S3-Deploy-Action`,
+                            input: buildOut,
+                            bucket: deployment.deploymentBuckets!.get(stage.stageType)!,
+                            extract: deployment.extract,
+                            objectKey:deployment.deploymentObjectName
+                        })
+                    } else {
+                        s3DeploymentAction = new S3DeployAction({
                             actionName: `${stage.stageType.toLowerCase()}-${deployment.deploymentRepo}-S3-Deploy-Action`,
                             input: buildOut,
                             bucket: deployment.deploymentBuckets!.get(stage.stageType)!,
                             extract: deployment.extract
                         })
-                    );
+                    }
+        
+                    existingActions.push(s3DeploymentAction);
                     this.deploymentActionsMap.set(stage.stageType, existingActions);
                 });
             }

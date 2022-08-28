@@ -26,7 +26,7 @@ export class MeetingsAssistantWebAppPipelineStack extends Construct {
             lambdaDeploymentBuckets.set(stage.stageType, meetingsAssistantStack.webappApiLambdaDeploymentBucket);
         });
         
-        // Code to deploy:
+        // Code to deploy - if extract is false then the deployment object must be named:
         const codeDeployments: CodeDeployment[] = [
             {
                 deploymentRepo: ConfigValues.GITHUB_WEBAPP_REPO,
@@ -36,7 +36,8 @@ export class MeetingsAssistantWebAppPipelineStack extends Construct {
             {
                 deploymentRepo: ConfigValues.GITHUB_API_LAMBDA_REPO,
                 deploymentBuckets: lambdaDeploymentBuckets,
-                extract: false
+                extract: false,
+                deploymentObjectName: ConfigValues.LAMBDA_ZIP_NAME_WITH_EXT
             }
         ]
     
