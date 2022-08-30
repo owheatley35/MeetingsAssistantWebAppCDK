@@ -6,6 +6,7 @@ import {StageConfigurations, StageType} from "./StageConfigurations";
 import Stage from "./Stage";
 import CodeDeploymentManager, {CodeDeployment} from "./CodeDeploymentManager";
 import {Bucket} from "aws-cdk-lib/aws-s3";
+import LambdaCodeUpdater, {LambdaCodeUpdaterConfiguration} from "./lambdaupdater/LambdaCodeUpdater";
 
 export class MeetingsAssistantWebAppPipelineStack extends Construct {
     constructor(parent: Construct, id: string) {
@@ -17,6 +18,9 @@ export class MeetingsAssistantWebAppPipelineStack extends Construct {
         const websiteDeploymentBuckets = new Map<StageType, Bucket>();
         const lambdaDeploymentBuckets = new Map<StageType, Bucket>();
         
+        // Define Updater Configuration
+        const lambdaUpdaterConfigurationMap = new Map<StageType, LambdaCodeUpdaterConfiguration[]>();
+        
         // Generate Stacks to Deploy
         StageConfigurations.ACTIVE_STAGES.forEach((stage) => {
             const  meetingsAssistantStack = new MeetingsAssistantWebAppCdkStack(this, `${stage.stageType.toLowerCase()}-meetings-assistant-web-app`, {stage: stage.stageType});
@@ -24,7 +28,21 @@ export class MeetingsAssistantWebAppPipelineStack extends Construct {
             // Set Deployment Buckets
             websiteDeploymentBuckets.set(stage.stageType, meetingsAssistantStack.staticWebAppDeploymentBucket);
             lambdaDeploymentBuckets.set(stage.stageType, meetingsAssistantStack.webappApiLambdaDeploymentBucket);
+            
+            // Set Lambda Updater Config - When creating a Lambda, must add values for it here to allow automatic updating of the code.
+            lambdaUpdaterConfigurationMap.set(stage.stageType, [
+                {
+                    functionArn: meetingsAssistantStack.apiLambdaFunctionArn,
+                    bucketName: meetingsAssistantStack.webappApiLambdaDeploymentBucket.bucketName,
+                    s3ObjectName: ConfigValues.LAMBDA_ZIP_NAME_WITH_EXT
+                }
+            ])
         });
+        
+        // Create Lambda Updater
+        const lambdaCodeUpdater: LambdaCodeUpdater = new LambdaCodeUpdater(this, {
+            codeToUpdatePerStage: lambdaUpdaterConfigurationMap
+        })
         
         // Code to deploy - if extract is false then the deployment object must be named:
         const codeDeployments: CodeDeployment[] = [
@@ -66,6 +84,7 @@ export class MeetingsAssistantWebAppPipelineStack extends Construct {
                 transitionToEnabled: true,
                 actions: [
                     ...codeDeploymentManager.getDeploymentActionsForStage(stage.stageType),
+                    ...lambdaCodeUpdater.generateUpdaterInvokeActionsForStage(stage.stageType),
                     ...stage.stageDeploymentActions
                 ]
             }

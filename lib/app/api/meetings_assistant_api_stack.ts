@@ -12,6 +12,7 @@ export interface MeetingsAssistantAPIStackProps extends StackProps {
 
 export class MeetingsAssistantAPIStack extends Stack {
     public readonly lambdaDeploymentBucket: Bucket;
+    public readonly lambdaFunctionArn: string;
     
     constructor(parent: Construct, id: string, props: MeetingsAssistantAPIStackProps) {
         super(parent, id, props);
@@ -26,5 +27,6 @@ export class MeetingsAssistantAPIStack extends Stack {
         
         // Public Values
         this.lambdaDeploymentBucket = lambdaConstruct.lambdaDeploymentBucket;
+        this.lambdaFunctionArn = lambdaConstruct.lambdaFunction.functionArn;
     }
 }

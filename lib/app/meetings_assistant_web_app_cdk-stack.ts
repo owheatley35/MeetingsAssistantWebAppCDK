@@ -17,6 +17,7 @@ export interface DefaultStackProps extends StackProps, DefaultConstructProps {}
 export class MeetingsAssistantWebAppCdkStack extends Stack {
     public readonly staticWebAppDeploymentBucket: Bucket;
     public readonly webappApiLambdaDeploymentBucket: Bucket;
+    public readonly apiLambdaFunctionArn: string;
     
     constructor(scope: Construct, id: string, props: DefaultStackProps) {
         super(scope, id, props);
@@ -41,5 +42,6 @@ export class MeetingsAssistantWebAppCdkStack extends Stack {
         // == Variables Required by Pipeline ==
         this.staticWebAppDeploymentBucket = staticWebAppStack.websiteBucket;
         this.webappApiLambdaDeploymentBucket = webAppApiStack.lambdaDeploymentBucket;
+        this.apiLambdaFunctionArn = webAppApiStack.lambdaFunctionArn;
     }
 }
