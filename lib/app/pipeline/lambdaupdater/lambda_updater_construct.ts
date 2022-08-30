@@ -20,7 +20,6 @@ class LambdaUpdaterConstruct extends Stack {
          const lambdaPolicyStatement: PolicyStatement = new PolicyStatement({
              effect: Effect.ALLOW,
              actions: ['lambda:UpdateFunctionCode'],
-             resources: [this.lambdaFunction.functionArn]
          });
     
          this.lambdaFunction.grantPrincipal.addToPrincipalPolicy(lambdaPolicyStatement);
