@@ -2,8 +2,9 @@ import {Construct} from "constructs";
 import {Code, Function, Runtime} from "aws-cdk-lib/aws-lambda";
 import * as path from "path";
 import {Effect, PolicyStatement} from "aws-cdk-lib/aws-iam";
+import {Stack} from "aws-cdk-lib";
 
-class LambdaUpdaterConstruct extends Construct {
+class LambdaUpdaterConstruct extends Stack {
     public readonly lambdaFunction: Function;
     
      constructor(scope: Construct, id: string) {
