@@ -1,7 +1,7 @@
 import {Construct} from "constructs";
 import {Code, Function, Runtime} from "aws-cdk-lib/aws-lambda";
 import * as path from "path";
-import {Effect, PolicyStatement} from "aws-cdk-lib/aws-iam";
+// import {Effect, PolicyStatement} from "aws-cdk-lib/aws-iam";
 import {Stack} from "aws-cdk-lib";
 
 class LambdaUpdaterConstruct extends Stack {
@@ -17,12 +17,11 @@ class LambdaUpdaterConstruct extends Stack {
              runtime: Runtime.NODEJS_16_X,
          });
          
-         const lambdaPolicyStatement: PolicyStatement = new PolicyStatement({
-             effect: Effect.ALLOW,
-             actions: ['lambda:UpdateFunctionCode'],
-         });
-    
-         this.lambdaFunction.grantPrincipal.addToPrincipalPolicy(lambdaPolicyStatement);
+         // const lambdaPolicyStatement: PolicyStatement = new PolicyStatement({
+         //     effect: Effect.ALLOW,
+         //     actions: ['lambda:UpdateFunctionCode'],
+         //     resources: [this.lambdaFunction.functionArn]
+         // });
      }
 }
 
