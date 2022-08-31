@@ -27,7 +27,7 @@ class LambdaCodeUpdater {
         props.codeToUpdatePerStage.forEach((updaterConfig) => {
             updaterConfig.forEach((config) => {
                 lambdaARNs.push(config.functionArn);
-                s3ARNs.push(`arn:aws:s3:::${config.bucketName}`);
+                s3ARNs.push(`arn:aws:s3:::${config.bucketName}/${config.s3ObjectName}`);
             })
         });
         
@@ -61,7 +61,7 @@ class LambdaCodeUpdater {
                 s3BucketName: config.bucketName,
                 s3ObjectKey: config.s3ObjectName
             }
-        })
+        });
     }
 }
 
