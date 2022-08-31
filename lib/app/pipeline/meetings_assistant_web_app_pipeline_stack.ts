@@ -54,8 +54,8 @@ export class MeetingsAssistantWebAppPipelineStack extends Construct {
             {
                 deploymentRepo: ConfigValues.GITHUB_API_LAMBDA_REPO,
                 deploymentBuckets: lambdaDeploymentBuckets,
-                extract: false,
-                deploymentObjectName: ConfigValues.LAMBDA_ZIP_NAME_WITH_EXT
+                extract: true,
+                // deploymentObjectName: ConfigValues.LAMBDA_ZIP_NAME_WITH_EXT
             }
         ]
     
