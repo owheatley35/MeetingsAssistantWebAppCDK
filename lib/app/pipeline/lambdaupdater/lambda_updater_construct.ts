@@ -7,7 +7,7 @@ import {Stack} from "aws-cdk-lib";
 class LambdaUpdaterConstruct extends Stack {
     public readonly lambdaFunction: Function;
     
-     constructor(scope: Construct, id: string) {
+     constructor(scope: Construct, id: string, lambdaARNsToBeUpdated: string[]) {
          super(scope, id);
     
          this.lambdaFunction = new Function(this, `api-lambda-updater-function`, {
@@ -20,7 +20,7 @@ class LambdaUpdaterConstruct extends Stack {
          const lambdaPolicyStatement: PolicyStatement = new PolicyStatement({
              effect: Effect.ALLOW,
              actions: ['lambda:UpdateFunctionCode'],
-             resources: ["arn:aws:lambda:eu-west-2::*"]
+             resources: lambdaARNsToBeUpdated
          });
     
          this.lambdaFunction.role?.attachInlinePolicy(

@@ -20,7 +20,17 @@ class LambdaCodeUpdater {
     private readonly codeToUpdatePerStage: Map<StageType, LambdaCodeUpdaterConfiguration[]>;
     
     constructor(scope: Construct, props: LambdaCodeUpdaterProps) {
-        const lambdaUpdaterInfra = new LambdaUpdaterConstruct(scope, 'lambda-updater');
+        
+        // Gather lambda ARNs for access to update
+        const lambdaARNs: string[] = [];
+        props.codeToUpdatePerStage.forEach((updaterConfig) => {
+            updaterConfig.forEach((config) => {
+                lambdaARNs.push(config.functionArn);
+            })
+        });
+        
+        // Create Lambda Function infrastructure
+        const lambdaUpdaterInfra = new LambdaUpdaterConstruct(scope, 'lambda-updater', lambdaARNs);
         
         this.lambdaFunction = lambdaUpdaterInfra.lambdaFunction;
         this.codeToUpdatePerStage = props.codeToUpdatePerStage;
