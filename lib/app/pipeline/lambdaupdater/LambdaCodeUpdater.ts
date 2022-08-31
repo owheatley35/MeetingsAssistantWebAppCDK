@@ -23,14 +23,19 @@ class LambdaCodeUpdater {
         
         // Gather lambda ARNs for access to update
         const lambdaARNs: string[] = [];
+        const s3ARNs: string[] = [];
         props.codeToUpdatePerStage.forEach((updaterConfig) => {
             updaterConfig.forEach((config) => {
                 lambdaARNs.push(config.functionArn);
+                s3ARNs.push(`arn:aws:s3:::${config.bucketName}`);
             })
         });
         
         // Create Lambda Function infrastructure
-        const lambdaUpdaterInfra = new LambdaUpdaterConstruct(scope, 'lambda-updater', lambdaARNs);
+        const lambdaUpdaterInfra = new LambdaUpdaterConstruct(scope, 'lambda-updater', {
+            lambdaARNsToBeUpdated: lambdaARNs,
+            s3ARNsToBeUpdated: s3ARNs,
+        });
         
         this.lambdaFunction = lambdaUpdaterInfra.lambdaFunction;
         this.codeToUpdatePerStage = props.codeToUpdatePerStage;
