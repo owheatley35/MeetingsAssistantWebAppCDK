@@ -3,14 +3,21 @@ import {Code, Function, Runtime} from "aws-cdk-lib/aws-lambda";
 import {Bucket, BucketAccessControl} from "aws-cdk-lib/aws-s3";
 import ConfigValues from "../../../ConfigValues";
 import {DefaultConstructProps} from "../../meetings_assistant_web_app_cdk-stack";
+import {Effect, Policy, PolicyStatement} from "aws-cdk-lib/aws-iam";
+import {Vpc} from "aws-cdk-lib/aws-ec2";
 // import {BucketDeployment, Source} from "aws-cdk-lib/aws-s3-deployment";
 // import * as path from "path";
+
+export interface MeetingsAssistantApiLambdaConstructProps extends DefaultConstructProps {
+    readonly rdsArn: string
+    readonly vpc: Vpc;
+}
 
 export class MeetingsAssistantApiLambdaConstruct extends Construct {
     public readonly lambdaFunction: Function;
     public readonly lambdaDeploymentBucket: Bucket;
     
-    constructor(parent: Construct, name: string, props: DefaultConstructProps) {
+    constructor(parent: Construct, name: string, props: MeetingsAssistantApiLambdaConstructProps) {
         super(parent, name);
     
         this.lambdaDeploymentBucket = new Bucket(this, `${props.stage.toLowerCase()}-api-lambda-deployment-bucket`, {
@@ -30,7 +37,29 @@ export class MeetingsAssistantApiLambdaConstruct extends Construct {
             description: "API Lambda Function for Meetings Assistant",
             handler: "lambda_handler.handle",
             runtime: Runtime.PYTHON_3_8,
+            vpc: props.vpc
         });
+    
+        const rdsAccessPolicy: PolicyStatement = new PolicyStatement({
+            effect: Effect.ALLOW,
+            actions: [
+                'ec2:CreateNetworkInterface',
+                'ec2:DescribeNetworkInterfaces',
+                'ec2:DeleteNetworkInterface',
+                'ec2:DescribeSecurityGroups',
+                'ec2:DescribeSubnets',
+                'ec2:DescribeVpcs'
+            ],
+            resources: [props.rdsArn]
+        });
+        
+        this.lambdaFunction.role?.attachInlinePolicy(
+            new Policy(this, `${props.stage}-lambda-access-rds-policy`, {
+                statements: [
+                    rdsAccessPolicy,
+                ]
+            })
+        );
     }
     
 }

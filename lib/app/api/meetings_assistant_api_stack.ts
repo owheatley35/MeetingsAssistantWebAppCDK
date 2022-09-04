@@ -4,6 +4,7 @@ import {StageType} from "../pipeline/StageConfigurations";
 import {MeetingsAssistantApiLambdaConstruct} from "./constructs/meetings_assistant_api_lambda_construct";
 import MeetingsAssistantApiGatewayConstruct from "./constructs/meetings_assistant_api_gateway_construct";
 import {Bucket} from "aws-cdk-lib/aws-s3";
+import MeetingsAssistantDatabaseConstruct from "./constructs/database/meetings_assistant_database_construct";
 
 export interface MeetingsAssistantAPIStackProps extends StackProps {
     readonly stage: StageType;
@@ -17,7 +18,13 @@ export class MeetingsAssistantAPIStack extends Stack {
     constructor(parent: Construct, id: string, props: MeetingsAssistantAPIStackProps) {
         super(parent, id, props);
         
-        const lambdaConstruct = new MeetingsAssistantApiLambdaConstruct(this, `${props.stage.toLowerCase()}-meetings-assistant-api-lambda-construct`, props);
+        const rdsConstruct = new MeetingsAssistantDatabaseConstruct(this, `${props.stage.toLowerCase()}-meetings-assistant-rds-db`, props)
+        
+        const lambdaConstruct = new MeetingsAssistantApiLambdaConstruct(this, `${props.stage.toLowerCase()}-meetings-assistant-api-lambda-construct`, {
+            rdsArn: rdsConstruct.rdsDBInstance.instanceArn,
+            vpc: rdsConstruct.vpc,
+            ...props
+        });
         
         const apiGatewayConstruct = new MeetingsAssistantApiGatewayConstruct(this, `${props.stage.toLowerCase()}-meetings-assistant-api-gateway-construct`, {
             lambdaFunction: lambdaConstruct.lambdaFunction,
