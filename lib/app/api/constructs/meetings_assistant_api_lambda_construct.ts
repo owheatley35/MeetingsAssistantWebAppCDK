@@ -9,8 +9,9 @@ import {Vpc} from "aws-cdk-lib/aws-ec2";
 // import * as path from "path";
 
 export interface MeetingsAssistantApiLambdaConstructProps extends DefaultConstructProps {
-    readonly rdsArn: string
+    readonly rdsArn: string;
     readonly vpc: Vpc;
+    readonly databaseInformationSecretName: string;
 }
 
 export class MeetingsAssistantApiLambdaConstruct extends Construct {
@@ -37,7 +38,10 @@ export class MeetingsAssistantApiLambdaConstruct extends Construct {
             description: "API Lambda Function for Meetings Assistant",
             handler: "lambda_handler.handle",
             runtime: Runtime.PYTHON_3_8,
-            vpc: props.vpc
+            vpc: props.vpc,
+            environment: {
+                databaseInformationSecretName: props.databaseInformationSecretName,
+            }
         });
     
         const rdsAccessPolicy: PolicyStatement = new PolicyStatement({

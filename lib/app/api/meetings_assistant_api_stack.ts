@@ -23,6 +23,7 @@ export class MeetingsAssistantAPIStack extends Stack {
         const lambdaConstruct = new MeetingsAssistantApiLambdaConstruct(this, `${props.stage.toLowerCase()}-meetings-assistant-api-lambda-construct`, {
             rdsArn: rdsConstruct.rdsDBInstance.instanceArn,
             vpc: rdsConstruct.vpc,
+            databaseInformationSecretName: rdsConstruct.credentialsSecretName,
             ...props
         });
         

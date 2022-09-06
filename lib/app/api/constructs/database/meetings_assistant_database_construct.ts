@@ -17,10 +17,10 @@ import {
 } from "aws-cdk-lib/aws-rds";
 import {Secret} from "aws-cdk-lib/aws-secretsmanager";
 import ConfigValues from "../../../../ConfigValues";
-import {Stack} from "aws-cdk-lib";
 
 class MeetingsAssistantDatabaseConstruct extends Construct {
     readonly rdsDBInstance: DatabaseInstance;
+    readonly credentialsSecretName: string;
     readonly vpc: Vpc;
     
     constructor(scope: Construct, id: string, props: DefaultConstructProps) {
@@ -105,6 +105,7 @@ class MeetingsAssistantDatabaseConstruct extends Construct {
         }
         
         // Export values
+        this.credentialsSecretName = databaseCredentialsSecret.secretName;
         this.rdsDBInstance = new DatabaseInstance(this, `${props?.stage}-instance`, rdsConfig);
         this.vpc = vpc;
     }
