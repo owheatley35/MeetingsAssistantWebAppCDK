@@ -22,6 +22,7 @@ class MeetingsAssistantDatabaseConstruct extends Construct {
     readonly rdsDBInstance: DatabaseInstance;
     readonly credentialsSecretName: string;
     readonly vpc: Vpc;
+    readonly secretArn: string;
     
     constructor(scope: Construct, id: string, props: DefaultConstructProps) {
         super(scope, id);
@@ -106,6 +107,7 @@ class MeetingsAssistantDatabaseConstruct extends Construct {
         
         // Export values
         this.credentialsSecretName = databaseCredentialsSecret.secretName;
+        this.secretArn = databaseCredentialsSecret.secretArn;
         this.rdsDBInstance = new DatabaseInstance(this, `${props?.stage}-instance`, rdsConfig);
         this.vpc = vpc;
     }

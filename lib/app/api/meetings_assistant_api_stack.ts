@@ -24,6 +24,7 @@ export class MeetingsAssistantAPIStack extends Stack {
             rdsArn: rdsConstruct.rdsDBInstance.instanceArn,
             vpc: rdsConstruct.vpc,
             databaseInformationSecretName: rdsConstruct.credentialsSecretName,
+            databaseInformationSecretArn: rdsConstruct.secretArn,
             ...props
         });
         

@@ -12,6 +12,7 @@ export interface MeetingsAssistantApiLambdaConstructProps extends DefaultConstru
     readonly rdsArn: string;
     readonly vpc: Vpc;
     readonly databaseInformationSecretName: string;
+    readonly databaseInformationSecretArn: string;
 }
 
 export class MeetingsAssistantApiLambdaConstruct extends Construct {
@@ -57,10 +58,24 @@ export class MeetingsAssistantApiLambdaConstruct extends Construct {
             resources: [props.rdsArn]
         });
         
+        const secretsManagerAccessPolicy: PolicyStatement = new PolicyStatement( {
+            effect: Effect.ALLOW,
+            actions: [
+                "secretsmanager:GetResourcePolicy",
+                "secretsmanager:GetSecretValue",
+                "secretsmanager:DescribeSecret",
+                "secretsmanager:ListSecretVersionIds"
+            ],
+            resources: [
+                props.databaseInformationSecretArn
+            ]
+        });
+        
         this.lambdaFunction.role?.attachInlinePolicy(
             new Policy(this, `${props.stage}-lambda-access-rds-policy`, {
                 statements: [
                     rdsAccessPolicy,
+                    secretsManagerAccessPolicy
                 ]
             })
         );
