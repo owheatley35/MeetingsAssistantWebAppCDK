@@ -3,7 +3,7 @@ import {DefaultConstructProps} from "../../../meetings_assistant_web_app_cdk-sta
 import {
     InstanceClass,
     InstanceSize,
-    InstanceType,
+    InstanceType, Peer, Port,
     SecurityGroup,
     SubnetType,
     Vpc
@@ -76,9 +76,12 @@ class MeetingsAssistantDatabaseConstruct extends Construct {
                 },
             ],
         });
+        
+        const securityGroup = new SecurityGroup(this, `vpc-security-group-${props.stage}`, {vpc});
+        securityGroup.addIngressRule(Peer.ipv4(vpc.vpcCidrBlock), Port.allTraffic(), 'Allow access from VPC')
     
-        const securityGroup = [
-            new SecurityGroup(this, `vpc-security-group-${props.stage}`, {vpc})
+        const securityGroups = [
+           securityGroup
         ];
     
         // Generate Secret for DB Credentials
@@ -101,7 +104,7 @@ class MeetingsAssistantDatabaseConstruct extends Construct {
             vpc: vpc,
             instanceIdentifier: `${props.stage}`,
             maxAllocatedStorage: 200,
-            securityGroups: securityGroup,
+            securityGroups: securityGroups,
             credentials: Credentials.fromSecret(databaseCredentialsSecret), // Get both username and password from existing secret
         }
         
