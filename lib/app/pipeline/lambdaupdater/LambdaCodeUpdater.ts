@@ -60,7 +60,8 @@ class LambdaCodeUpdater {
                 functionArn: config.functionArn,
                 s3BucketName: config.bucketName,
                 s3ObjectKey: config.s3ObjectName
-            }
+            },
+            runOrder: 2
         });
     }
 }

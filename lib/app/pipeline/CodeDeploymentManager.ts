@@ -66,14 +66,16 @@ class CodeDeploymentManager {
                             input: buildOut,
                             bucket: deployment.deploymentBuckets!.get(stage.stageType)!,
                             extract: deployment.extract,
-                            objectKey:deployment.deploymentObjectName
+                            objectKey:deployment.deploymentObjectName,
+                            runOrder: 1
                         })
                     } else {
                         s3DeploymentAction = new S3DeployAction({
                             actionName: `${stage.stageType.toLowerCase()}-${deployment.deploymentRepo}-S3-Deploy-Action`,
                             input: buildOut,
                             bucket: deployment.deploymentBuckets!.get(stage.stageType)!,
-                            extract: deployment.extract
+                            extract: deployment.extract,
+                            runOrder: 1
                         })
                     }
         
