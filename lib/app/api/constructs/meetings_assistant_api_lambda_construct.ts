@@ -42,6 +42,7 @@ export class MeetingsAssistantApiLambdaConstruct extends Construct {
             vpc: props.vpc,
             environment: {
                 databaseInformationSecretName: props.databaseInformationSecretName,
+                stage: props.stage.toUpperCase()
             }
         });
     
