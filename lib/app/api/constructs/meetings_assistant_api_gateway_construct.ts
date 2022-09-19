@@ -2,7 +2,7 @@ import {Construct} from "constructs";
 import {DefaultConstructProps} from "../../meetings_assistant_web_app_cdk-stack";
 import {Stack} from "aws-cdk-lib";
 import {Function} from "aws-cdk-lib/aws-lambda";
-import {Cors, HttpIntegration, LambdaRestApi, TokenAuthorizer} from "aws-cdk-lib/aws-apigateway";
+import {Cors, LambdaRestApi} from "aws-cdk-lib/aws-apigateway";
 
 export interface MeetingsAssistantApiGatewayConstructProps extends DefaultConstructProps {
     readonly lambdaFunction: Function;
@@ -22,26 +22,9 @@ class MeetingsAssistantApiGatewayConstruct extends Construct {
             },
         });
     
-        // Secure the API through a JWT from Auth0
-        // const issuer = 'https://oliwheatley.eu.auth0.com/'
-        // const authorizer = new TokenAuthorizer(this, `${props.stage}-meetings-assistant-token-auth`, {
-        //
-        // });
-    
         // == Add endpoints to API ==
-        
-        // GET /meetings - Return all meetings owned by owner
-        const items = api.root.addResource('meetings');
-        items.addMethod('GET');
-        
-        //     {
-        //     authorizer: authorizer
-        // });
-    
-        // GET /meetings/{meetingId} - Return specific meeting by meeting ID
-        const item = items.addResource('{meetingId}');
-        item.addMethod('GET');
-        
+        api.root.addMethod('GET')
+        api.root.addMethod('PUT')
     }
 }
 
