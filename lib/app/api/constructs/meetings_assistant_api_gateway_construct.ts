@@ -15,16 +15,12 @@ class MeetingsAssistantApiGatewayConstruct extends Construct {
         
         const api = new LambdaRestApi(this, `${props.stage.toLowerCase()}-meetings-assistant-web-app-api-gateway`, {
             handler: props.lambdaFunction,
-            proxy: false,
+            proxy: true,
             defaultCorsPreflightOptions: {
                 allowOrigins: [props.websiteDomain],
                 allowMethods: Cors.ALL_METHODS // this is also the default
             },
         });
-    
-        // == Add endpoints to API ==
-        api.root.addMethod('GET')
-        api.root.addMethod('PUT')
     }
 }
 
