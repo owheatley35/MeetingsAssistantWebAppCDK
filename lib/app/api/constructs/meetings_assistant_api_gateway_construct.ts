@@ -17,8 +17,9 @@ class MeetingsAssistantApiGatewayConstruct extends Construct {
             handler: props.lambdaFunction,
             proxy: true,
             defaultCorsPreflightOptions: {
-                allowOrigins: [props.websiteDomain],
-                allowMethods: Cors.ALL_METHODS // this is also the default
+                allowOrigins: ['https://'+ props.websiteDomain],
+                allowMethods: Cors.ALL_METHODS,
+                allowHeaders: Cors.DEFAULT_HEADERS
             },
         });
     }
